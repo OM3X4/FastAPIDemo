@@ -57,3 +57,13 @@ class UserResponse(BaseModel):
 def getUsers(db: Session = Depends(get_db)):
     users = db.query(User).all()
     return users
+
+
+@app.get("/view-db")
+def view_db():
+    conn = sqlite3.connect("test.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    tables = cursor.fetchall()
+    conn.close()
+    return {"tables": tables}
